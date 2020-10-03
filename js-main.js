@@ -40,6 +40,8 @@ function createGallery (array){
 
 function onCloseBtnClick(){
     refs.modal.classList.remove('is-open')
+    const modalImg = refs.modalImg
+    modalImg.src = '';
 }
 
 function onImgClick (event) {
