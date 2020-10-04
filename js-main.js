@@ -82,7 +82,7 @@ function closeModal(){
     refs.modal.classList.remove('is-open')
     window.removeEventListener('keydown', changeImg )
     refs.modalImg.src = '';
-    refs.modalImg.dataset.index = 0;
+    refs.modalImg.dataset.index = '';
 }
 
 function setNextImg(currentImgIndex, modifier){
