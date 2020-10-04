@@ -1,19 +1,21 @@
 import imgArray from './gallery-items.js'
-console.log(imgArray);
+
 const refs = {
     galleryList: document.querySelector('.js-gallery'),
     modal: document.querySelector('div.lightbox'),
     closeModalBtn: document.querySelector('.lightbox__button'),
-    modalImg: document.querySelector('.lightbox__image')
+    modalImg: document.querySelector('.lightbox__image'),
+    overlay: document.querySelector('.lightbox__overlay')
 }
 
 refs.galleryList.addEventListener('click',onImgClick)
-refs.closeModalBtn.addEventListener('click', onCloseBtnClick)
+refs.closeModalBtn.addEventListener('click', closeModal)
+refs.overlay.addEventListener('click', OnBackDropClick)
 
 createGallery(imgArray);
 
 function createGallery (array){
-    const galleryArray = array.map(img => {
+    const galleryArray = array.map((img, i) => {
         const listItem = document.createElement('li');
         const listLink = document.createElement('a');
         const listImg = document.createElement('img');
@@ -29,6 +31,7 @@ function createGallery (array){
         listImg.setAttribute('alt', img.description);
 
         listImg.dataset.source = img.original;
+        listImg.dataset.index = i;
 
         listItem.appendChild(listLink);
         listLink.appendChild(listImg);
@@ -38,23 +41,59 @@ function createGallery (array){
     refs.galleryList.append(...galleryArray);
 }
 
-function onCloseBtnClick(){
-    refs.modal.classList.remove('is-open')
-    const modalImg = refs.modalImg
-    modalImg.src = '';
-}
-
 function onImgClick (event) {
     event.preventDefault();
-    const img = event.target
-    if(img.nodeName !== 'IMG'){return};
 
+    const currnetImg = event.target
+    if(currnetImg.nodeName !== 'IMG'){return};
     refs.modal.classList.add('is-open');
 
-    const fullSizedImageSrc = img.dataset.source;
+    const fullSizedImageSrc = currnetImg.dataset.source;
     const modalImg = refs.modalImg
-    console.log(fullSizedImageSrc);
 
     modalImg.src = fullSizedImageSrc;
+    refs.modalImg.dataset.index = currnetImg.dataset.index
 
+    window.addEventListener('keydown', changeImg)
+}
+
+function changeImg(event){
+    const currentImgIndex = Number(refs.modalImg.dataset.index);
+
+        switch (event.code) {
+            case 'Escape' : closeModal();
+            break;
+
+            case 'ArrowRight' : 
+            if(currentImgIndex < imgArray.length -1){
+                setNextImg(currentImgIndex, 1)
+            }
+            break;
+
+            case 'ArrowLeft' : 
+            if( 0 < currentImgIndex){
+                setNextImg(currentImgIndex, -1);
+            }
+            break;
+        }
+}
+
+function closeModal(){
+    refs.modal.classList.remove('is-open')
+    window.removeEventListener('keydown', changeImg )
+    refs.modalImg.src = '';
+    refs.modalImg.dataset.index = 0;
+}
+
+function setNextImg(currentImgIndex, modifier){
+    const imgToSet = document.querySelector(`.js-gallery  img[data-index='${currentImgIndex + modifier}']`)
+    
+    refs.modalImg.src = imgToSet.dataset.source
+    refs.modalImg.dataset.index = imgToSet.dataset.index
+}
+
+function OnBackDropClick(event){
+    if(event.target === event.currentTarget) {
+        closeModal()
+    }
 }
