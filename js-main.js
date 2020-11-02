@@ -27,7 +27,6 @@ function createGallery (array){
         listLink.setAttribute('href', img.original );
 
         listImg.setAttribute('src' , img.preview);
-        listImg.setAttribute('src' , img.preview);
         listImg.setAttribute('alt', img.description);
 
         listImg.dataset.source = img.original;
@@ -44,36 +43,31 @@ function createGallery (array){
 function onImgClick (event) {
     event.preventDefault();
 
-    const currnetImg = event.target
-    if(currnetImg.nodeName !== 'IMG'){return};
-    refs.modal.classList.add('is-open');
+    const currnetImg = event.target;
+    
+    currnetImg.nodeName === 'IMG' ? refs.modal.classList.add('is-open'): false;
 
     const fullSizedImageSrc = currnetImg.dataset.source;
     const modalImg = refs.modalImg
 
     modalImg.src = fullSizedImageSrc;
-    refs.modalImg.dataset.index = currnetImg.dataset.index
+    refs.modalImg.dataset.index = currnetImg.dataset.index;
 
     window.addEventListener('keydown', changeImg)
 }
 
 function changeImg(event){
     const currentImgIndex = Number(refs.modalImg.dataset.index);
-
         switch (event.code) {
             case 'Escape' : closeModal();
             break;
 
             case 'ArrowRight' : 
-            if(currentImgIndex < imgArray.length -1){
-                setNextImg(currentImgIndex, 1)
-            }
+            currentImgIndex < imgArray.length -1 ? setNextImg(currentImgIndex, 1) : false;
             break;
 
             case 'ArrowLeft' : 
-            if( 0 < currentImgIndex){
-                setNextImg(currentImgIndex, -1);
-            }
+            0 < currentImgIndex ? setNextImg(currentImgIndex, -1) : false;
             break;
         }
 }
@@ -93,7 +87,5 @@ function setNextImg(currentImgIndex, modifier){
 }
 
 function OnBackDropClick(event){
-    if(event.target === event.currentTarget) {
-        closeModal()
-    }
+    return event.target === event.currentTarget ? closeModal() : false;
 }
