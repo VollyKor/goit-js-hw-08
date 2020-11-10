@@ -40,10 +40,10 @@ function createGallery (array){
     refs.galleryList.append(...galleryArray);
 }
 
-function onImgClick (event) {
-    event.preventDefault();
+function onImgClick (e) {
+    e.preventDefault();
 
-    const currnetImg = event.target;
+    const currnetImg = e.target;
     
     currnetImg.nodeName === 'IMG' ? refs.modal.classList.add('is-open'): false;
 
@@ -56,9 +56,9 @@ function onImgClick (event) {
     window.addEventListener('keydown', changeImg)
 }
 
-function changeImg(event){
+function changeImg(e){
     const currentImgIndex = Number(refs.modalImg.dataset.index);
-        switch (event.code) {
+        switch (e.code) {
             case 'Escape' : closeModal();
             break;
 
@@ -86,6 +86,6 @@ function setNextImg(currentImgIndex, modifier){
     refs.modalImg.dataset.index = imgToSet.dataset.index
 }
 
-function OnBackDropClick(event){
-    return event.target === event.currentTarget ? closeModal() : false;
+function OnBackDropClick(e){
+    return e.target === e.currentTarget ? closeModal() : false;
 }
