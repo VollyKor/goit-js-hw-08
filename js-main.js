@@ -8,13 +8,13 @@ const refs = {
     overlay: document.querySelector('.lightbox__overlay')
 }
 
-refs.galleryList.addEventListener('click',onImgClick)
+refs.galleryList.addEventListener('click', onImgClick)
 refs.closeModalBtn.addEventListener('click', closeModal)
 refs.overlay.addEventListener('click', OnBackDropClick)
 
 createGallery(imgArray);
 
-function createGallery (array){
+function createGallery(array) {
     const galleryArray = array.map((img, i) => {
         const listItem = document.createElement('li');
         const listLink = document.createElement('a');
@@ -23,10 +23,10 @@ function createGallery (array){
         listItem.classList.add('gallery__item');
         listLink.classList.add('gallery__link');
         listImg.classList.add('gallery__image');
-        
-        listLink.setAttribute('href', img.original );
 
-        listImg.setAttribute('src' , img.preview);
+        listLink.setAttribute('href', img.original);
+
+        listImg.setAttribute('src', img.preview);
         listImg.setAttribute('alt', img.description);
 
         listImg.dataset.source = img.original;
@@ -40,12 +40,18 @@ function createGallery (array){
     refs.galleryList.append(...galleryArray);
 }
 
-function onImgClick (e) {
+function onImgClick(e) {
     e.preventDefault();
 
     const currnetImg = e.target;
+    // Плохой вариант
+    // currnetImg.nodeName === 'IMG' ? refs.modal.classList.add('is-open'): false;
+
+    if (currnetImg.nodeName !== 'IMG') {
+        return;
+    }
     
-    currnetImg.nodeName === 'IMG' ? refs.modal.classList.add('is-open'): false;
+    refs.modal.classList.add('is-open')
 
     const fullSizedImageSrc = currnetImg.dataset.source;
     const modalImg = refs.modalImg
@@ -56,36 +62,36 @@ function onImgClick (e) {
     window.addEventListener('keydown', changeImg)
 }
 
-function changeImg(e){
+function changeImg(e) {
     const currentImgIndex = Number(refs.modalImg.dataset.index);
-        switch (e.code) {
-            case 'Escape' : closeModal();
+    switch (e.code) {
+        case 'Escape': closeModal();
             break;
 
-            case 'ArrowRight' : 
-            currentImgIndex < imgArray.length -1 ? setNextImg(currentImgIndex, 1) : false;
+        case 'ArrowRight':
+            currentImgIndex < imgArray.length - 1 ? setNextImg(currentImgIndex, 1) : false;
             break;
 
-            case 'ArrowLeft' : 
+        case 'ArrowLeft':
             0 < currentImgIndex ? setNextImg(currentImgIndex, -1) : false;
             break;
-        }
+    }
 }
 
-function closeModal(){
+function closeModal() {
     refs.modal.classList.remove('is-open')
-    window.removeEventListener('keydown', changeImg )
+    window.removeEventListener('keydown', changeImg)
     refs.modalImg.src = '';
     refs.modalImg.dataset.index = '';
 }
 
-function setNextImg(currentImgIndex, modifier){
+function setNextImg(currentImgIndex, modifier) {
     const imgToSet = document.querySelector(`.js-gallery  img[data-index='${currentImgIndex + modifier}']`)
-    
+
     refs.modalImg.src = imgToSet.dataset.source
     refs.modalImg.dataset.index = imgToSet.dataset.index
 }
 
-function OnBackDropClick(e){
+function OnBackDropClick(e) {
     return e.target === e.currentTarget ? closeModal() : false;
 }
