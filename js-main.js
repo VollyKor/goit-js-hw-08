@@ -50,7 +50,7 @@ function onImgClick(e) {
     if (currnetImg.nodeName !== 'IMG') {
         return;
     }
-    
+
     refs.modal.classList.add('is-open')
 
     const fullSizedImageSrc = currnetImg.dataset.source;
@@ -93,5 +93,9 @@ function setNextImg(currentImgIndex, modifier) {
 }
 
 function OnBackDropClick(e) {
-    return e.target === e.currentTarget ? closeModal() : false;
+    // Плохой вариант
+    // return e.target === e.currentTarget ? closeModal() : false;
+    if (e.target === e.currentTarget) {
+        return closeModal()
+    }
 }
